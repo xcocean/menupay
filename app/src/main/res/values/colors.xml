@@ -3,4 +3,25 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="black">#000000</color>
+
+    <color name="clickBlue">#1296db</color>
+    <color name="gray">#8a8a8a</color>
+    <color name="bgGray">#e6e6e6</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#ff0000</color>
+    <color name="blue1">#1E90FF</color>
+    <color name="blue8">#BFEFFF</color>
+    <color name="blue2">#68b5ff</color>
+    <color name="green">#dfffd8</color>
+    <color name="green2">#dfffd8</color>
+
+    <color name="colorItemClick">#d4d0d0</color>
+    <color name="colorItemNormal">#efefef</color>
+
+    <color name="editGreen">#72e972</color>
+
+    <color name="blue">#0022ff</color>
+
 </resources>

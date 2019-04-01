@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--  stroke    (描边) -->
+    <stroke
+        android:width="3dp"
+        android:color="@color/blue8" />
+    <!-- 上述写法等价于   （此处是统一设置四个角） -->
+    <corners android:radius="45sp" />
+    <!--  pading    (间隔) ,控件中的内容距离四个边的长度 -->
+    <padding
+        android:bottom="12dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="12dp" />
+    <solid android:color="@color/white" />
+</shape>
