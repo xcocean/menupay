@@ -13,8 +13,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false  //这里是混淆 true开启  防止别人反编译  规则文件 proguard-rules.pro
-//            shrinkResources true //app压缩 生产环境打开
+            minifyEnabled true  //这里是混淆 true开启  防止别人反编译  规则文件 proguard-rules.pro
+            shrinkResources true //app压缩 生产环境打开
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

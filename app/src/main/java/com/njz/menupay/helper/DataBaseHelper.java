@@ -25,10 +25,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             "handle_status text," +
             "name text," +
             "order_number text," +
+            "handle_time text," +
+            "complete_time text," +
             "create_time text)";
 
     public DataBaseHelper(Context context) {
-        super(context, databaseName, null, 2);
+        super(context, databaseName, null, 4);
     }
 
     @Override

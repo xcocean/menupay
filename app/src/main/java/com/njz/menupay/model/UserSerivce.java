@@ -13,6 +13,27 @@ import java.util.Map;
 
 public class UserSerivce {
 
+    /**
+     * 修改密码
+     */
+    public String pudatePassword(String username, String token, String newPassword) throws IOException {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", username);
+        map.put("token", token);
+        map.put("password", newPassword);
+        return NetOkHttp.postHttp(Config.URL_UPDATE_PASSWORD, map);
+    }
+
+    /**
+     * 获取账单
+     */
+    public String getBill(String username, String token) throws IOException {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", username);
+        map.put("token", token);
+        return NetOkHttp.postHttp(Config.URL_USER_ORDER, map);
+    }
+
 
     /**
      * 注册

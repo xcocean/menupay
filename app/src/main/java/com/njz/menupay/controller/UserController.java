@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.gson.Gson;
@@ -13,7 +14,9 @@ import com.njz.menupay.helper.SharedPreferencesHelper;
 import com.njz.menupay.model.UserSerivce;
 import com.njz.menupay.view.activity.LoginActivity;
 import com.njz.menupay.view.activity.RegisterActivity;
+import com.njz.menupay.view.activity.UserInfoActivity;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +27,8 @@ public class UserController {
     private Context context;
     private String message;
     private Button button;
+    private TextView textView;
+    private Map<String, String> map = new HashMap<>();
 
     public void register(Context context, Button button, String username, String password, String email) {
         this.context = context;
@@ -108,7 +113,7 @@ public class UserController {
                         SharedPreferencesHelper.getInstance().putString(context, "photo", map.get("photo"));
                         SharedPreferencesHelper.getInstance().putString(context, "email", map.get("email"));
                         SharedPreferencesHelper.getInstance().putString(context, "phone", map.get("phone"));
-                        SharedPreferencesHelper.getInstance().putString(context,"userCallback","success");//修改回调
+                        SharedPreferencesHelper.getInstance().putString(context, "userCallback", "success");//修改回调
                         handler.sendEmptyMessage(371);
                     } else {
                         String t = maps.get(Config.RESULT);
@@ -124,6 +129,62 @@ public class UserController {
 
                 }
                 handler.sendEmptyMessage(377);
+            }
+        }).start();
+    }
+
+    /**
+     * 获取账单
+     */
+    public void getBill(Context context, TextView textView) {
+        this.textView = textView;
+        this.context = context;
+        String token = SharedPreferencesHelper.getInstance().getString(context, "token", "token");
+        String username = SharedPreferencesHelper.getInstance().getString(context, "username", "username");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserSerivce userSerivce = new UserSerivce();
+                try {
+                    String res = userSerivce.getBill(username, token);
+                    if (res != null) {
+                        Gson gson = new Gson();
+                        map = gson.fromJson(res, Map.class);
+                        message = map.get(Config.RESULT);
+                        handler.sendEmptyMessage(333);
+                    } else {
+                        handler.sendEmptyMessage(331);
+                    }
+                } catch (Exception e) {
+                    handler.sendEmptyMessage(332);
+                }
+            }
+        }).start();
+
+    }
+
+    public void updatePassword(Context context,String newPassword){
+        this.context = context;
+        String token = SharedPreferencesHelper.getInstance().getString(context, "token", "token");
+        String username = SharedPreferencesHelper.getInstance().getString(context, "username", "username");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserSerivce userSerivce=new UserSerivce();
+                try {
+                    String res=userSerivce.pudatePassword(username,token,newPassword);
+                    Gson gson=new Gson();
+                    map=gson.fromJson(res,Map.class);
+                    if(map.get(Config.STATUS).equals(Config.STATUS_SUCCESS)){
+                        handler.sendEmptyMessage(351);
+                    }else {
+//                        message=map.get(Config.RESULT);
+                        handler.sendEmptyMessage(353);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(352);
+                }
             }
         }).start();
     }
@@ -171,6 +232,23 @@ public class UserController {
             } else if (msg.what == 307) {
                 button.setText("注 册");
                 button.setEnabled(true);//释放按钮
+            }
+            if (msg.what == 331) {
+                MessageHelper.getInstance().toastCenter(context, "您的身份已经过期！请重新登陆。");
+            } else if (msg.what == 332) {
+                MessageHelper.getInstance().toastCenter(context, "连接超时-请检查网络");
+            } else if (msg.what == 333) {
+                textView.setText(message+" ￥");
+            }
+            if(msg.what==351){//修改密码成功
+                SharedPreferencesHelper.getInstance().putBoolean(context,"loginStatus",false);
+                SharedPreferencesHelper.getInstance().putString(context,"userCallback","success");
+                MessageHelper.getInstance().toastCenter(context, "修改密码成功！");
+                UserInfoActivity.userInfoActivity.finish();
+            }else if (msg.what == 352) {
+                MessageHelper.getInstance().toastCenter(context, "连接超时-请检查网络");
+            }else if (msg.what == 353) {
+                MessageHelper.getInstance().toastCenter(context, "身份已经过期，请重新登陆。");
             }
         }
     };

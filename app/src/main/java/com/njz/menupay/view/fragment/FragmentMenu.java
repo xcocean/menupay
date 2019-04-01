@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -62,7 +63,7 @@ public class FragmentMenu extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                intent.putExtra("id",i);
+                intent.putExtra("id", i);
                 startActivity(intent);
             }
         });
@@ -75,16 +76,40 @@ public class FragmentMenu extends Fragment {
         swipeMenu.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                boolean b= menuController.onRefreshListener(getActivity(),listView);//下拉刷新初始化
-                if(b){
+                boolean b = menuController.onRefreshListener(getActivity(), listView);//下拉刷新初始化
+                if (b) {
                     //停止刷新的圆圈
                     swipeMenu.setRefreshing(false);
-                    MessageHelper.getInstance().toastCenter(getActivity(),"刷新成功");
-                }else {
+                    MessageHelper.getInstance().toastCenter(getActivity(), "刷新成功");
+                } else {
                     //停止刷新的圆圈
                     swipeMenu.setRefreshing(false);
-                    MessageHelper.getInstance().toastCenter(getActivity(),"刷新失败");
+                    MessageHelper.getInstance().toastCenter(getActivity(), "刷新失败");
                 }
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                boolean enable = false;
+                if (listView != null && listView.getChildCount() > 0) {
+                    // 检查listView第一个item是否可见
+                    boolean firstItemVisible = listView.getFirstVisiblePosition() == 0;
+                    // 检查第一个item的顶部是否可见
+                    boolean topOfFirstItemVisible = listView.getChildAt(0).getTop() == 0;
+                    // 启用或者禁用SwipeRefreshLayout刷新标识
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                } else if (listView != null && listView.getChildCount() == 0) {
+                    // 没有数据的时候允许刷新
+                    enable = true;
+                }
+                // 把标识传给swipeRefreshLayout
+                swipeMenu.setEnabled(enable);
             }
         });
 

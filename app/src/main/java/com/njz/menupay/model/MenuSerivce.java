@@ -2,6 +2,7 @@ package com.njz.menupay.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -87,7 +88,7 @@ public class MenuSerivce {
         //将数据写入数据库
         DataBaseHelper helper = new DataBaseHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("delete from menu");//删除表的数据
+        db.execSQL("delete from menu");//删除表的数据--防止升级数据库时表不存在
         for (int i = 0; i < menus.size(); i++) {
             db.execSQL("insert into menu(id,name,price,describe,picture,serverPicture,salesNumber) values(?,?,?,?,?,?,?)", new String[]{menus.get(i).getId().toString(),
                     menus.get(i).getName(), menus.get(i).getPrice(), menus.get(i).getDescribe(),
@@ -217,6 +218,6 @@ public class MenuSerivce {
         map.put("username", username);
         map.put("token", token);
         map.put("id", id);
-        return NetOkHttp.postHttp(Config.URL_LOGIN, map);
+        return NetOkHttp.postHttp(Config.URL_ADD_ORDER, map);
     }
 }

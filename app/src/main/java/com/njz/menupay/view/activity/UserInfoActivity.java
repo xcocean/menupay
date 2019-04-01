@@ -1,28 +1,36 @@
 package com.njz.menupay.view.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.njz.menupay.R;
+import com.njz.menupay.controller.UserController;
 import com.njz.menupay.helper.MessageHelper;
 import com.njz.menupay.helper.SharedPreferencesHelper;
+import com.njz.menupay.utils.Utils;
 
 public class UserInfoActivity extends AppCompatActivity {
 
     private ImageView ivPhoto;
     private TextView tvName, tPhone, tEmail;
     private BootstrapButton btnSet, btnLogout, btnUpdatePassword;
+    public static UserInfoActivity userInfoActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+        userInfoActivity = this;
 
         initView();
     }
@@ -51,7 +59,33 @@ public class UserInfoActivity extends AppCompatActivity {
         btnUpdatePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                EditText et = new EditText(UserInfoActivity.this);
+                et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);//密码样式
+                AlertDialog.Builder numbe = new AlertDialog.Builder(UserInfoActivity.this);
+                numbe.setTitle("请输入新密码：")
+                        .setView(et)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //按下确定键后的事件
+                                if (et == null) {
+                                    MessageHelper.getInstance().toastCenter(UserInfoActivity.this, "密码不能为空");
+                                } else {
+                                    String password = et.getText().toString();
+                                    if (password.length() < 4) {
+                                        MessageHelper.getInstance().toastCenter(UserInfoActivity.this, "密码长度至少4位");
+                                        return;
+                                    } else if (!Utils.isPassword(password)) {
+                                        MessageHelper.getInstance().toastCenter(UserInfoActivity.this, "密码格式有误！数字、字母");
+                                        return ;
+                                    }
+                                    UserController userController = new UserController();
+                                    userController.updatePassword(UserInfoActivity.this, password);
+                                }
+                                return;
+                            }
+                        }).setNegativeButton("取消", null);
+                numbe.show();
             }
         });
 

@@ -14,11 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.njz.menupay.R;
 import com.njz.menupay.helper.MessageHelper;
 import com.njz.menupay.helper.SharedPreferencesHelper;
 import com.njz.menupay.view.activity.LoginActivity;
+import com.njz.menupay.view.activity.UserBillActivity;
 import com.njz.menupay.view.activity.UserInfoActivity;
 
 public class FragmentUser extends Fragment {
@@ -57,6 +57,7 @@ public class FragmentUser extends Fragment {
         if (!loginStatus) {
             ivPhoto.setImageResource(R.mipmap.ic_user_default);
             tvName.setText("未登录");
+            setPhoto(ivPhoto, "default");
         } else {
             String photo = SharedPreferencesHelper.getInstance().getString(getActivity(), "photo", "default");
             setPhoto(ivPhoto, photo);
@@ -67,6 +68,16 @@ public class FragmentUser extends Fragment {
             @Override
             public void onClick(View view) {
                 MessageHelper.getInstance().toastCenter(getActivity(), "当前版本1.0.1，最新版本1.0.1");
+            }
+        });
+        //点击账单
+        llBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (SharedPreferencesHelper.getInstance().getBoolean(getActivity(), "loginStatus", false))
+                    startActivity(new Intent(getActivity(), UserBillActivity.class));
+                else
+                    MessageHelper.getInstance().toast(getActivity(), "您还没有登陆");
             }
         });
 
@@ -134,6 +145,7 @@ public class FragmentUser extends Fragment {
             tvName.setText(name);
         } else {
             tvName.setText("未登录");
+            setPhoto(ivPhoto, "default");
         }
     }
 

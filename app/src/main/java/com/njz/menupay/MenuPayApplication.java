@@ -1,21 +1,14 @@
 package com.njz.menupay;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.njz.menupay.config.Config;
-import com.njz.menupay.helper.DataBaseHelper;
 import com.njz.menupay.helper.SharedPreferencesHelper;
-import com.njz.menupay.network.NetOkHttp;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +39,5 @@ public class MenuPayApplication extends Application {
 
         //初始化设备名--整个手机的名称
         SharedPreferencesHelper.getInstance().putString(getApplicationContext(), "device", Build.PRODUCT);
-
     }
 }

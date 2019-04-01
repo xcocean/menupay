@@ -9,6 +9,9 @@ public class Config {
     public static final String URL_LOGIN="/login/user";
     public static final String URL_UPDATE_INFO="/user/updateInfo";
     public static final String URL_GET_ORDER="/user/getOrder";
+    public static final String URL_ADD_ORDER="/user/addOrder";
+    public static final String URL_USER_ORDER="/user/getBill";
+    public static final String URL_UPDATE_PASSWORD="/user/updatePassword";
 
 
     //状态码---采用枚举也可以
